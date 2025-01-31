@@ -103,38 +103,27 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceEvenly, // Evenly distribute space
-                    children: days.asMap().entries.map((entry) {
-                      int index = entry.key; // Index of the day
-                      Day d = entry.value; // The actual Day object
+            return Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), // Outer padding
+  child: ListView.builder(
+    physics: BouncingScrollPhysics(), // Smooth scrolling
+    itemCount: days.length,
+    itemBuilder: (context, index) {
+      Day d = days[index];
 
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 8.0), // Add spacing
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // Space between buttons
-                            children: [
-                              // Navigate Button
-                              Expanded(
-                                child: DayButton(context, index, d),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(), // Convert map results to a list
-                  ),
-                ),
-              ),
-            );
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0), // Space between items
+        child: Center(
+          child: SizedBox(
+            width: double.infinity, // Make button take full width
+            child: DayButton(context, index, d),
+          ),
+        ),
+      );
+    },
+  ),
+);
+
           },
         ),
       ),
@@ -147,37 +136,52 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   ElevatedButton DayButton(BuildContext context, int index, Day d) {
-    return ElevatedButton(
-      onLongPress: () => showDeleteDialog(context, index),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DayDetailsPage(day: d),
-          ),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.yellow.shade300, // Button color
-        minimumSize: Size(250, 50),
-        maximumSize: Size(250, 100), // Button size
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+  return ElevatedButton(
+    onLongPress: () => showDeleteDialog(context, index),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DayDetailsPage(day: d),
         ),
+      );
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.amber.shade300, // Warmer shade for a softer look
+      elevation: 6, // Adds a subtle shadow
+      shadowColor: Colors.grey.withOpacity(0.5), // Softer shadow
+      minimumSize: Size(250, 70), // Adjusted size for better proportion
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16), // Smoother corners
       ),
-      child: Column(children: [
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
         Text(
           'Day ${index + 1}',
-          style: TextStyle(fontSize: 18, color: Colors.grey),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black54, // Slightly darker for better contrast
+          ),
         ),
+        SizedBox(height: 4), // Adds spacing between texts
         Text(
-          '${d.name}',
-          style: TextStyle(fontSize: 25, color: Colors.black),
+          d.name,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87, // Enhances readability
+          ),
         ),
-      ]),
-    );
-  }
+      ],
+    ),
+  );
+}
+
 
   void _showAddDayDialog(BuildContext context) {
     TextEditingController _controller = TextEditingController();

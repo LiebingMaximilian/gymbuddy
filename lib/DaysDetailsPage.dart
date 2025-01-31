@@ -66,51 +66,58 @@ class _DayDetailsPageState extends State<DayDetailsPage> {
     );
   }
 
-  Expanded ExerciseButton(BuildContext context, Exercise e, int index) {
-    return Expanded(
-                            child: ElevatedButton(
-                              onPressed: () =>
-                                  showEditExerciseDialog(context, e, index),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Colors.yellow.shade300, // Button color
-                                minimumSize: Size(250, 50),
-                                maximumSize: Size(250, 100), // Button size
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 16, horizontal: 32),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Column(children: [
-                                Text(
-                                  '${e.name}',
-                                  style: TextStyle(
-                                      fontSize: 25, color: Colors.black),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                  Text(
-                                    '${e.weight} kg',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                  Text(
-                                    '${e.reps} reps',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                  Text(
-                                    '${e.sets} sets',
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                ])
-                              ]),
-                            ),
-                          );
-  }
+Expanded ExerciseButton(BuildContext context, Exercise e, int index) {
+  return Expanded(
+    child: ElevatedButton(
+      onPressed: () => showEditExerciseDialog(context, e, index),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.amber.shade300, // Warmer color
+        elevation: 6, // Adds subtle shadow
+        shadowColor: Colors.grey.withOpacity(0.4), // Softer shadow effect
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16), // Softer corners
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            '${e.name}',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87, // Better readability
+            ),
+          ),
+          SizedBox(height: 8), // Adds spacing
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildExerciseDetail('${e.weight} kg'),
+              _buildExerciseDetail('${e.reps} reps'),
+              _buildExerciseDetail('${e.sets} sets'),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+// Helper method for uniform styling of exercise details
+Widget _buildExerciseDetail(String text) {
+  return Text(
+    text,
+    style: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      color: Colors.black54, // Subtle contrast
+    ),
+  );
+}
+
 
   void _showAddExerciseDialog(BuildContext context) {
     TextEditingController nameController = TextEditingController();
