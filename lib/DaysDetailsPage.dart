@@ -47,17 +47,6 @@ class _DayDetailsPageState extends State<DayDetailsPage> {
                             ExerciseButton(context, e, index),
 
                             SizedBox(width: 10), // Space between buttons
-
-                            // Delete Button
-                            if (widget.showDeleteButtons)
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    showEditExerciseDialog(context, e, index);
-                                  });
-                                },
-                                icon: Icon(Icons.edit, color: Colors.red),
-                              ),
                           ],
                         ),
                       ),
@@ -260,6 +249,17 @@ class _DayDetailsPageState extends State<DayDetailsPage> {
             ],
           ),
           actions: [
+            ElevatedButton(
+              
+              onPressed: () {
+                widget.day.exercises.removeAt(index);
+                // After editing, save the updated day
+                saveDay(widget.day); // Save the updated day
+                // Close dialog
+                Navigator.pop(context);
+              },
+              child: Text('Delete'),
+            ),
             // Cancel Button
             TextButton(
               onPressed: () {

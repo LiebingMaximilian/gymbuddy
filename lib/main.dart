@@ -61,7 +61,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Day> days = [];
-  final bool showDeleteButtons = true;
 
   @override
   void initState() {
@@ -125,55 +124,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               // Navigate Button
                               Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DayDetailsPage(day: d),
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Colors.yellow.shade300, // Button color
-                                    minimumSize: Size(250, 50),
-                                    maximumSize: Size(250, 100), // Button size
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 16, horizontal: 32),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: Column(children: [
-                                    Text(
-                                      'Day ${index + 1}',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.grey),
-                                    ),
-                                    Text(
-                                      '${d.name}',
-                                      style: TextStyle(
-                                          fontSize: 25, color: Colors.black),
-                                    ),
-                                  ]),
-                                ),
+                                child: DayButton(context, index, d),
                               ),
-
-                              // Delete Button
-                              if (showDeleteButtons)
-                                SizedBox(width: 10), // Space between buttons
-                              if (showDeleteButtons)
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      days.removeAt(
-                                          index); // Remove this day from the list
-                                    });
-                                  },
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                ),
                             ],
                           ),
                         ),
@@ -191,6 +143,39 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Add day',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  ElevatedButton DayButton(BuildContext context, int index, Day d) {
+    return ElevatedButton(
+      onLongPress: () => showDeleteDialog(context, index),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DayDetailsPage(day: d),
+          ),
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.yellow.shade300, // Button color
+        minimumSize: Size(250, 50),
+        maximumSize: Size(250, 100), // Button size
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Column(children: [
+        Text(
+          'Day ${index + 1}',
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+        ),
+        Text(
+          '${d.name}',
+          style: TextStyle(fontSize: 25, color: Colors.black),
+        ),
+      ]),
     );
   }
 
@@ -222,6 +207,38 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pop(context); // Close dialog after adding
               },
               child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showDeleteDialog(BuildContext context, int index) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Prevents dismissing by tapping outside
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content: Text('Are you sure you want to delete this item?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Close dialog
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                this.days.removeAt(index);
+                saveDays(
+                    days); // Save the updated days list to SharedPreferences
+                setState(() {});
+                Navigator.of(dialogContext).pop(); // Close dialog
+                // Code to delete the item should be implemented by the caller
+              },
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
