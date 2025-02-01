@@ -256,12 +256,13 @@ Widget _buildExerciseDetail(String text) {
             ],
           ),
           actions: [
-            ElevatedButton(
-              
+            ElevatedButton(         
               onPressed: () {
                 widget.day.exercises.removeAt(index);
                 // After editing, save the updated day
-                saveDay(widget.day); // Save the updated day
+                setState(() {
+                  saveDay(widget.day); // Save the updated day
+                }); // Save the updated day
                 // Close dialog
                 Navigator.pop(context);
               },
@@ -304,7 +305,9 @@ Widget _buildExerciseDetail(String text) {
                 widget.day.exercises[index] = exercise;
 
                 // After editing, save the updated day
-                saveDay(widget.day); // Save the updated day
+                setState(() {
+                  saveDay(widget.day); // Save the updated day
+                });
                 // Close dialog
                 Navigator.pop(context);
               },
