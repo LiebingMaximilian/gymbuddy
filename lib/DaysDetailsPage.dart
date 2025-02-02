@@ -17,53 +17,46 @@ class DayDetailsPage extends StatefulWidget {
 class _DayDetailsPageState extends State<DayDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(widget.day.name),
-          backgroundColor: Colors.yellow.shade300,
-          shadowColor: Colors.yellow.shade600),
-      body: Center(
-        child: LayoutBuilder(builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly, // Evenly distribute space
-                  children: widget.day.exercises.asMap().entries.map((entry) {
-                    int index = entry.key; // Index of the day
-                    Exercise e = entry.value; // The actual Day object
+return Scaffold(
+  appBar: AppBar(
+    title: Text(widget.day.name),
+    backgroundColor: Colors.yellow.shade300,
+    shadowColor: Colors.yellow.shade600,
+  ),
+  body: Center(
+    child: LayoutBuilder(builder: (context, constraints) {
+      return SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: constraints.maxHeight),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start, // Align items to the top-left
+            children: widget.day.exercises.asMap().entries.map((entry) {
+              int index = entry.key;
+              Exercise e = entry.value;
 
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 8.0), // Add spacing
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment
-                              .spaceBetween, // Space between buttons
-                          children: [
-                            // Navigate Button
-                            ExerciseButton(context, e, index),
-
-                            SizedBox(width: 10), // Space between buttons
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(), // Convert map results to a list
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ExerciseButton(context, e, index),
+                    SizedBox(width: 10),
+                  ],
                 ),
-              ),
-            ),
-          );
-        }),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddExerciseDialog(context),
-        tooltip: 'Add day',
-        child: const Icon(Icons.add),
-      ),
-    );
+              );
+            }).toList(),
+          ),
+        ),
+      );
+    }),
+  ),
+  floatingActionButton: FloatingActionButton(
+    onPressed: () => _showAddExerciseDialog(context),
+    tooltip: 'Add day',
+    child: const Icon(Icons.add),
+  ),
+);
+
   }
 
 Expanded ExerciseButton(BuildContext context, Exercise e, int index) {
